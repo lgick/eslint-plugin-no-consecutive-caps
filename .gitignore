@@ -1,0 +1,11 @@
+.DS_Store
+_*
+node_modules/
+.TRASH
+/public/tests/
+/public/js/vendor/
+/client/dist/
+dist
+logs
+*.log
+npm-debug.log*

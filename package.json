@@ -1,0 +1,45 @@
+{
+  "name": "eslint-plugin-no-consecutive-caps",
+  "version": "1.0.5",
+  "description": "An ESLint plugin to disallow consecutive uppercase letters in identifiers, often found in acronyms.",
+  "homepage": "https://github.com/lgick/eslint-plugin-no-consecutive-caps#readme",
+  "bugs": {
+    "url": "https://github.com/lgick/eslint-plugin-no-consecutive-caps/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lgick/eslint-plugin-no-consecutive-caps.git"
+  },
+  "license": "MIT",
+  "author": "lgick",
+  "types": "dist/index.d.ts",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rm -rf dist",
+    "build": "npm run clean && tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "files": [
+    "index.js",
+    "lib/",
+    "dist/"
+  ],
+  "keywords": [
+    "eslint",
+    "eslintplugin",
+    "eslint-plugin",
+    "caps",
+    "camelcase",
+    "style",
+    "naming",
+    "acronym"
+  ],
+  "peerDependencies": {
+    "eslint": "^8.0.0 || ^9.0.0"
+  },
+  "devDependencies": {
+    "@types/eslint": "^8.56.10",
+    "typescript": "^5.4.5"
+  }
+}
