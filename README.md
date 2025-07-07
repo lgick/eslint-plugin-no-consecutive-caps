@@ -46,7 +46,7 @@ element.innerHTML = '...'; // OK
 const range = document.createRange(); // OK
 ```
 
-The plugin only checks identifiers that you declare and control: variables, functions, classes, and their parameters.
+The plugin only checks identifiers that you declare and control: variables, functions, classes, **their properties (`this.someProp`)**, and parameters.
 
 ## 💿 Installation
 
@@ -113,7 +113,7 @@ function getNewURL() {
 class HTMLParser {
   // Error: 'HTML'
   constructor() {
-    this.rootElement = null;
+    this.parserID = 'main'; // Error: 'ID'
   }
 }
 ```
@@ -130,7 +130,7 @@ function getNewUrl() {
 
 class HtmlParser {
   constructor() {
-    this.rootElement = null;
+    this.parserId = 'main';
   }
 }
 ```
@@ -182,10 +182,10 @@ const primaryAPIKey = '...'; // Error: 'API' was not added to the exceptions
 
 The plugin's intelligence comes from a two-phase process that leverages ESLint's scope analysis:
 
-1.  **Collection Phase:** As ESLint traverses your code, the plugin inspects every `Identifier`. It uses scope analysis to determine if the identifier belongs to a variable you declared (a function, class, `const`, `let`, or parameter) or if it's a standalone entity (like an object key or method name).
+1.  **Collection Phase:** As ESLint traverses your code, the plugin inspects every `Identifier`. It uses scope analysis to determine if the identifier belongs to a variable you declared (a function, class, `const`, `let`, or parameter) or if it's a standalone entity (like an object key, a method name, or a property on `this`).
 
     - **Global cases** (variables) are collected in a list for later processing.
-    - **Local cases** (like object keys) are reported immediately with a simple, local fix.
+    - **Local cases** (like object keys or properties on `this`) are reported immediately with a simple, local fix.
 
 2.  **Reporting Phase (`Program:exit`):** After the entire file has been analyzed, the plugin processes the collected variables. For each variable, it finds all its references (declaration and usages) and generates a single **global fix** to rename them all at once. This ensures that an autofix corrects the identifier everywhere, maintaining code integrity.
 

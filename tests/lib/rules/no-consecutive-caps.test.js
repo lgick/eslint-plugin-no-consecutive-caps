@@ -1,6 +1,6 @@
 'use strict';
 
-const { RuleTester } = require('eslint');
+import { RuleTester } from 'eslint';
 const rule = require('../../../lib/rules/no-consecutive-caps');
 
 const ruleTester = new RuleTester({
@@ -91,7 +91,6 @@ ruleTester.run('no-consecutive-caps', rule, {
         },
       ],
     },
-    // Этот тест теперь проходит, потому что `MethodDefinition` обрабатывает свои параметры
     {
       code: 'class Parser { parseHTML() {} }',
       output: 'class Parser { parseHtml() {} }',
@@ -110,6 +109,31 @@ ruleTester.run('no-consecutive-caps', rule, {
         {
           messageId: 'consecutiveCaps',
           data: { name: 'myAPIKey', suggestion: 'myApiKey' },
+        },
+      ],
+    },
+    {
+      code: 'class A { constructor() { this.fameIDH = 4; console.log(this.fameIDH); } }',
+      output:
+        'class A { constructor() { this.fameIdh = 4; console.log(this.fameIdh); } }',
+      errors: [
+        {
+          messageId: 'consecutiveCaps',
+          data: { name: 'fameIDH', suggestion: 'fameIdh' },
+        },
+        {
+          messageId: 'consecutiveCaps',
+          data: { name: 'fameIDH', suggestion: 'fameIdh' },
+        },
+      ],
+    },
+    {
+      code: 'function C() { this._fameIDH = 4; }',
+      output: 'function C() { this._fameIdh = 4; }',
+      errors: [
+        {
+          messageId: 'consecutiveCaps',
+          data: { name: '_fameIDH', suggestion: '_fameIdh' },
         },
       ],
     },
