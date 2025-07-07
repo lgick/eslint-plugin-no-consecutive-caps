@@ -31,6 +31,7 @@ ruleTester.run('no-consecutive-caps', rule, {
       options: [{ exceptions: ['API', 'Key'] }],
     },
   ],
+
   invalid: [
     {
       code: 'function getURL() {}; const url = getURL();',
@@ -126,9 +127,13 @@ ruleTester.run('no-consecutive-caps', rule, {
       ],
     },
     {
-      code: 'function C() { this._fameIDH = 4; }',
-      output: 'function C() { this._fameIdh = 4; }',
+      code: 'function C() { this._fameIDH = 4; return this._fameIDH; }',
+      output: 'function C() { this._fameIdh = 4; return this._fameIdh; }',
       errors: [
+        {
+          messageId: 'consecutiveCaps',
+          data: { name: '_fameIDH', suggestion: '_fameIdh' },
+        },
         {
           messageId: 'consecutiveCaps',
           data: { name: '_fameIDH', suggestion: '_fameIdh' },

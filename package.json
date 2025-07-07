@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-no-consecutive-caps",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "type": "module",
   "description": "An ESLint plugin to disallow consecutive uppercase letters in identifiers, often found in acronyms.",
   "homepage": "https://github.com/lgick/eslint-plugin-no-consecutive-caps#readme",

@@ -11,8 +11,8 @@ An ESLint plugin to enforce a stricter camelCase convention by disallowing conse
 ## ✨ Key Features
 
 - **Strict Naming Style:** Disallows acronyms like `userID` or `APIKey` in favor of `userId` and `apiKey` for improved consistency.
-- **Intelligent Detection:** Uses scope analysis to determine which identifiers are declared within your codebase. **It will not trigger errors** on properties and methods from third-party libraries or built-in browser APIs.
-- **Comprehensive Fixer:** Automatically renames all occurrences of a variable, function, or class throughout its scope with a single command.
+- **Intelligent Detection:** Uses scope and AST analysis to determine which identifiers are declared within your codebase. **It will not trigger errors** on properties from third-party libraries or built-in browser APIs.
+- **Comprehensive Fixer:** Automatically renames all occurrences of an identifier—including variables, functions, classes, and their properties (`this.myProp`)—throughout its scope with a single command.
 - **Flexible Exceptions:** Allows you to specify a list of permitted acronyms if needed.
 - **Flat Config Ready:** Designed for the modern `eslint.config.js` format.
 
@@ -31,7 +31,7 @@ This plugin solves the problem by proposing a single, strict style.
 
 ### Key Advantage: Ignoring Third-Party Code
 
-The biggest problem with similar rules is false positives on code you don't control. This plugin uses **ESLint's scope analysis** to solve this:
+The biggest problem with similar rules is false positives on code you don't control. This plugin uses **ESLint's scope and AST analysis** to solve this:
 
 ```javascript
 // ✅ This code will not cause errors, as the plugin understands
@@ -46,7 +46,7 @@ element.innerHTML = '...'; // OK
 const range = document.createRange(); // OK
 ```
 
-The plugin only checks identifiers that you declare and control: variables, functions, classes, **their properties (`this.someProp`)**, and parameters.
+The plugin only checks identifiers that you declare and control: variables, functions, classes, **their properties (`this.someProp`, object keys)**, and parameters.
 
 ## 💿 Installation
 
@@ -97,7 +97,7 @@ export default [
 
 ### `no-consecutive-caps/no-consecutive-caps`
 
-Disallows using two or more consecutive uppercase letters in identifiers that you declare in your code. The autofix for variables, functions, and classes will rename all instances within the file.
+Disallows using two or more consecutive uppercase letters in identifiers that you declare in your code. The autofix will rename all instances of an identifier (variables, functions, classes, and user-defined properties) within the file.
 
 **❌ Examples of incorrect code (will trigger an error):**
 
@@ -180,14 +180,16 @@ const primaryAPIKey = '...'; // Error: 'API' was not added to the exceptions
 
 ## 💡 How It Works (A Look Under the Hood)
 
-The plugin's intelligence comes from a two-phase process that leverages ESLint's scope analysis:
+The plugin's intelligence comes from a two-phase process that leverages ESLint's built-in tools:
 
-1.  **Collection Phase:** As ESLint traverses your code, the plugin inspects every `Identifier`. It uses scope analysis to determine if the identifier belongs to a variable you declared (a function, class, `const`, `let`, or parameter) or if it's a standalone entity (like an object key, a method name, or a property on `this`).
+1.  **Collection Phase:** As ESLint traverses your code, the plugin inspects every `Identifier`. It uses two strategies to identify code you control:
 
-    - **Global cases** (variables) are collected in a list for later processing.
-    - **Local cases** (like object keys or properties on `this`) are reported immediately with a simple, local fix.
+    - **Scope Analysis:** For variables, functions, and classes, it uses ESLint's scope analysis to find their original declaration and all references.
+    - **AST Analysis:** For properties (`this.myProp`), object keys (`{myKey: 1}`), and class methods, it analyzes the code's structure (the AST) to identify them as user-defined.
 
-2.  **Reporting Phase (`Program:exit`):** After the entire file has been analyzed, the plugin processes the collected variables. For each variable, it finds all its references (declaration and usages) and generates a single **global fix** to rename them all at once. This ensures that an autofix corrects the identifier everywhere, maintaining code integrity.
+    All identifiers found to have consecutive caps are collected in lists for processing at the end, instead of being reported immediately.
+
+2.  **Reporting Phase (`Program:exit`):** After the entire file has been analyzed, the plugin processes the collected lists. For each group of identifiers (e.g., all occurrences of the variable `myAPIKey` or the property `fameIDH`), it generates a single, **comprehensive fix** to rename them all at once. This ensures that an autofix corrects an identifier everywhere, maintaining code integrity and providing a seamless developer experience in your editor.
 
 ## ❤️ Contributing
 
