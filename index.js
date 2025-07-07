@@ -1,8 +1,7 @@
-'use strict';
+import noConsecutiveCaps from './lib/rules/no-consecutive-caps.js';
 
-/** @type {import('eslint').ESLint.Plugin} */
-module.exports = {
+export default /** @type {import('eslint').ESLint.Plugin} */ ({
   rules: {
-    'no-consecutive-caps': require('./lib/rules/no-consecutive-caps'),
+    'no-consecutive-caps': noConsecutiveCaps,
   },
-};
+});

@@ -1,14 +1,13 @@
-// --- File: eslint-plugin-no-consecutive-caps/tsconfig.json (ФИНАЛЬНЫЙ ВАРИАНТ) ---
 {
   "compilerOptions": {
     "allowJs": true,
     "declaration": true,
     "emitDeclarationOnly": true,
-    // Выводить все файлы в папку 'dist'
     "outDir": "dist",
     "strict": true,
-    "lib": ["ES2015", "DOM"]
+    "lib": ["ES2015", "DOM"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext"
   },
-  // Исходники остаются те же
   "include": ["index.js", "lib/**/*.js"]
 }
