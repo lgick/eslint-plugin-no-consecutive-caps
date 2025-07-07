@@ -1,7 +1,5 @@
-'use strict';
-
 import { RuleTester } from 'eslint';
-const rule = require('../../../lib/rules/no-consecutive-caps');
+import rule from '../../../lib/rules/no-consecutive-caps.js';
 
 const ruleTester = new RuleTester({
   languageOptions: {
